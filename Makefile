@@ -14,7 +14,7 @@ compile:
 
 .PHONY: link
 link: compile
-	mkdir -p $(ASTERIUS_OUTPUT_DIR)
+	mkdir  $(BUILD_DIR)\asterius
 	docker run --rm -v $(CURDIR):$(DOCKER_WS) -w $(DOCKER_WS) $(DOCKER_IMAGE) \
 		ahc-dist \
 			--input-exe $(AHC_CABAL_INSTALL_DIR)/wasm-pandoc \
@@ -25,13 +25,16 @@ link: compile
 .PHONY: start
 start: link
 	npm install
-	ASTERIUS_OUTPUT_DIR=$(ASTERIUS_OUTPUT_DIR) npm start
+	set ASTERIUS_OUTPUT_DIR=$(ASTERIUS_OUTPUT_DIR)
+	npm start
 
 .PHONY: build
 build: link
 	npm install
-	ASTERIUS_OUTPUT_DIR=$(ASTERIUS_OUTPUT_DIR) npm run build
+	set ASTERIUS_OUTPUT_DIR=$(ASTERIUS_OUTPUT_DIR)
+	npm run build
 
 .PHONY: clean
 clean:
-	rm -rf $(BUILD_DIR)
+	del /Q $(BUILD_DIR)
+	rmdir /S /Q  $(BUILD_DIR)
